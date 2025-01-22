@@ -1,4 +1,4 @@
-### **Sentiment Analysis Project Using OpenAI API and Machine Learning**
+# **Sentiment Analysis Project Using OpenAI API and Machine Learning**
 
 ## **Overview**
 This project performs sentiment analysis on a dataset of social media posts. It uses OpenAI's GPT-3.5 model to classify the sentiment of each text entry as **Positive**, **Negative**, or **Neutral**. Additionally, a **Random Forest classifier** is trained on the sentiment labels for further analysis and prediction. The project respects **OpenAI's API usage limits**, adhering to both **requests per minute (RPM)** and **requests per day (RPD)** limits by implementing rate limiting with a sleep interval between API calls.
