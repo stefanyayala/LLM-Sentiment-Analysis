@@ -1,0 +1,19 @@
+# Core Python packages
+pandas==1.5.3
+numpy==1.24.2
+
+# Machine Learning and NLP packages
+scikit-learn==1.2.2
+
+# Kaggle API for dataset handling
+kaggle==1.5.12
+
+# OpenAI API for sentiment analysis
+openai==0.28.0
+
+# Serialization tools
+joblib==1.2.0
+
+# Any other dependencies
+matplotlib==3.7.1  # Optional, for data visualization
+seaborn==0.12.2   # Optional, for enhanced visualizations
