@@ -71,8 +71,9 @@ def get_openai_sentiment(text, rpm_limit=3, rpd_limit=200):
 
 ### 4. Encode Sentiments
 The sentiments returned by the OpenAI API are mapped to numerical labels:
-- Positive: 1
+
 - Negative: 0
+- Positive: 1
 - Neutral: 2
 
 ### 5. Train/Test Split
