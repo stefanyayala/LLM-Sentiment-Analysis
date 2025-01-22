@@ -1,12 +1,12 @@
 # Sentiment Analysis Project Using OpenAI API and Machine Learning
 
 ## Overview
-This project analyzes sentiments from a dataset of social media posts using OpenAI’s GPT model for nuanced sentiment classification. Additionally, it employs machine learning techniques to train a classifier based on the generated sentiments. The project adheres to OpenAI's API usage limits and implements rate limiting and batching mechanisms.
+This project analyzes sentiments from a dataset of social media posts using OpenAI’s GPT model for sentiment classification. Additionally, it employs machine learning techniques to train a classifier based on the categorized sentiments. The project adheres to OpenAI's API usage limits and implements rate limiting and batching mechanisms.
 
 ## Features
 - Downloads and preprocesses a social media sentiment dataset.
-- Integrates OpenAI GPT API to classify text into nuanced sentiment categories.
-- Uses machine learning (Gradient Boosting) to train a model based on the sentiment data.
+- Integrates OpenAI GPT API to classify text into Positive, Negative, or Neutral sentiment categories.
+- Uses machine learning (Random Forest) to train a model based on the sentiment data.
 - Implements rate limiting to respect API usage constraints (RPM, RPD).
 - Saves results and trained models for future use.
 
@@ -17,7 +17,7 @@ The dataset is retrieved from Kaggle using the `kagglehub` library. Ensure you h
 
 ### Dataset Structure
 - **Text**: The social media post text.
-- **Sentiment**: The categorized sentiment labels (output of OpenAI API).
+- **Sentiment**: The categorized sentiment labels (Positive, Negative, Neutral).
 
 ---
 
@@ -43,53 +43,53 @@ path = kagglehub.dataset_download("kashishparmar02/social-media-sentiments-analy
 
 ### 2. Preprocess Dataset
 - Load the dataset into a Pandas DataFrame.
-- Apply text cleaning if necessary (e.g., removing special characters, URLs).
+- Trim spaces from the `Sentiment` column.
+- Filter rows where `Sentiment` is in [Positive, Negative, Neutral].
 
 ### 3. OpenAI Sentiment Analysis
 A function `get_openai_sentiment()` is implemented to:
-- Call the OpenAI API with a prompt to classify sentiments.
+- Call the OpenAI API with a prompt to classify sentiments into Positive, Negative, or Neutral.
 - Implement rate limiting (20 seconds delay between requests).
 - Handle errors gracefully.
 
 ```python
 def get_openai_sentiment(text, rpm_limit=3, rpd_limit=200):
     try:
-        prompt = (
-            "Analyze the sentiment of the following text and classify it into one or more categories:\n\n"
-            "Categories: Positive, Negative, Neutral, Joy, Sadness, Anger, Fear, Surprise, Gratitude, etc.\n\n"
-            f"Text: {text}\nSentiment:"
-        )
+        prompt = f"Analyze the sentiment of the following text and classify as Positive, Negative, or Neutral:\n\nText: {text}\nSentiment:"
         response = openai.Completion.create(
             engine="gpt-3.5-turbo",
             prompt=prompt,
             max_tokens=50,
             temperature=0.5,
         )
-        sentiment = response['choices'][0]['text'].strip().split(", ")
+        sentiment = response['choices'][0]['text'].strip()
         return sentiment
     except Exception as e:
         print(f"Error: {e}")
-        return ["Error"]
+        return "Error"
 ```
 
 ### 4. Encode Sentiments
-The sentiments returned by the OpenAI API are encoded using `MultiLabelBinarizer` for compatibility with machine learning models.
+The sentiments returned by the OpenAI API are mapped to numerical labels:
+- Positive: 1
+- Negative: 0
+- Neutral: 2
 
 ### 5. Train/Test Split
 The dataset is split into training and testing sets (80/20 split) for model training and evaluation.
 
-### 6. TF-IDF Vectorization
-The text data is transformed into numerical format using `TfidfVectorizer`. The vectorized text is then used to train the model.
+### 6. Text Vectorization
+The text data uses CountVectorizer to transform text into feature vectors. The vectorized text is then used to train the model.
 
-### 7. Train Gradient Boosting Model
-A Gradient Boosting Classifier is trained on the encoded sentiments. The trained model is saved for future use.
+### 7. Train Random Forest Model
+A Random Forest model is trained on the encoded sentiments. The trained model is saved for future use.
 
 ### 8. Evaluate Model
 The trained model is evaluated using accuracy, F1 score, and a classification report.
 
 ### 9. Save Results
-- The processed dataset with encoded sentiments is saved as `sentiment_results.csv`.
-- The trained model, vectorizer, and label binarizer are saved as `.pkl` files.
+- The processed dataset with predicted sentiments is saved as `sentiment_results.csv`.
+- The trained model and vectorizer are saved as `.pkl` files.
 
 ---
 
@@ -101,8 +101,7 @@ The trained model is evaluated using accuracy, F1 score, and a classification re
 ### Outputs
 - **Processed Dataset**: `sentiment_results.csv`
 - **Trained Model**: `sentiment_model.pkl`
-- **TF-IDF Vectorizer**: `vectorizer.pkl`
-- **Label Binarizer**: `label_binarizer.pkl`
+- **Vectorizer**: `vectorizer.pkl`
 
 ---
 
